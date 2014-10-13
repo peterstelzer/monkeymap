@@ -33,6 +33,8 @@ public class Room {
      */
     private MonkeyMap mapOfRooms;
 
+    private List<Room> visitedConnections = new ArrayList<Room>();
+
 
     public int getyLocation() {
         return yLocation;
@@ -58,6 +60,9 @@ public class Room {
         setMapOfRooms(mapOfRooms);
     }
 
+    public void markConectionsAsVisited(Room room){
+        visitedConnections.add(room);
+    }
 
     public int getMonkeys() {
         return monkeys;
@@ -80,7 +85,6 @@ public class Room {
     }
 
     public void setExits(int exits) {
-
         this.exits = exits;
     }
 
@@ -125,6 +129,16 @@ public class Room {
     }
 
 
+    public Room getAnUnvisitedConnectedRoom(){
+        int i = 0;
+        Room nextRoom = connections.get(i);
+        while (visitedConnections.contains(nextRoom)){
+            nextRoom = connections.get(i++);
+        }
+        visitedConnections.add(nextRoom);
+        return nextRoom;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (object instanceof Room && ((Room) object).getxLocation() == this.getxLocation() && ((Room) object).getyLocation() == this.getyLocation()) {
@@ -132,6 +146,15 @@ public class Room {
         } else {
             return false;
         }
+    }
+
+    public List<Room> getConnections(){
+        return connections;
+    }
+
+    @Override
+    public String toString(){
+        return ("Room at x=" + getxLocation() + ", y=" + getyLocation());
     }
 
 }

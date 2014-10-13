@@ -2,16 +2,25 @@ package com.maya.model;
 
 import com.maya.rules.MayaRules;
 
-import java.awt.*;
+import java.util.List;
 
 /**
  * Created by pete on 10/6/14.
  */
 public class MonkeyMap {
+
+    /**
+     * The map's rooms, stored in a two-dimensional array
+     */
     private Room[][] rooms = new Room[5][5];
 
-    public MonkeyMap(){
+    /**
+     * The path to render (path shows the current path being tested)
+     */
+    private List<Room> path = null;
 
+
+    public MonkeyMap(){
         rooms[0][0] = new Room(0, 3, 0, 0, 0, this);
         rooms[1][0] = new Room(2, 0, 0, 1, 0, this);
         rooms[2][0] = new Room(0, 1, 0, 2, 0, this);
@@ -75,6 +84,7 @@ public class MonkeyMap {
         rooms[3][1].addConnectingRoom(rooms[3][2]);
         rooms[3][1].addConnectingRoom(rooms[4][2]);
         rooms[3][1].addConnectingRoom(rooms[4][1]);
+        rooms[3][1].addConnectingRoom(rooms[4][0]);
 
         rooms[4][1].addConnectingRoom(rooms[4][2]);
 
@@ -91,10 +101,10 @@ public class MonkeyMap {
         rooms[2][2].addConnectingRoom(rooms[3][2]);
 
         rooms[3][2].addConnectingRoom(rooms[4][2]);
-        rooms[3][2].addConnectingRoom(rooms[3][4]);
+        rooms[3][2].addConnectingRoom(rooms[3][3]);
 
-        rooms[4][2].addConnectingRoom(rooms[3][4]);
         rooms[4][2].addConnectingRoom(rooms[4][3]);
+        rooms[4][2].addConnectingRoom(rooms[3][3]);
 
         rooms[0][3].addConnectingRoom(rooms[0][4]);
         rooms[0][3].addConnectingRoom(rooms[1][3]);
@@ -147,11 +157,13 @@ public class MonkeyMap {
     public Room findRoomWithExit(){
         for (int y = 0; y < MayaRules.MAP_LENGTH; y++){
             for (int x= 0; x < MayaRules.MAP_WIDTH; x++){
-                if (getRoom(x, y).getExits() > 0);{
+                if (getRoom(x, y).getExits() > 0){
                     return getRoom(x, y);
                 }
             }
         }
         return null;
     }
+
+
 }
