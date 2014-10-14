@@ -1,7 +1,5 @@
 package com.maya.util;
 
-import com.maya.model.Room;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,6 +145,25 @@ public class TreeNode<T> {
         else{
             for (TreeNode<T> currentNode : node.children) {
                 findPathsWithCertainEndpoint(results, endPoint, currentNode);
+            }
+        }
+    }
+
+    public List<TreeNode<T>> findPathsWithCertainLength(int length) {
+        List<TreeNode<T>> results = new ArrayList<TreeNode<T>>();
+        findPathsWithCertainLength(results, length, this, 0);
+        return results;
+    }
+
+    private void findPathsWithCertainLength(List<TreeNode<T>> results, int length, TreeNode<T> node, int currentLength) {
+        if (node.children.size() == 0) {
+            // we have an endpoint!  Does it have a length of our sought-after length?
+            if (currentLength == length) {
+                results.add(node);
+            }
+        } else {
+            for (TreeNode<T> currentNode : node.children) {
+                findPathsWithCertainLength(results, length, currentNode, ++currentLength);
             }
         }
     }

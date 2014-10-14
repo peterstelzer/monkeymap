@@ -47,7 +47,8 @@ public class MayaRules {
         TreeNode<Room> tree = new TreeNode<Room>(room);
         traverseToNextRoom(tree, map, 0);
         System.out.println("We found a total of " + tree.numberOfLeafNodes() + " that result in a positive number of monkeys");
-        List<TreeNode<Room>> solutions = countPathsWithLeafNodesAtExit(tree);
+        List<TreeNode<Room>> solutionsPass1 = countPathsWithLeafNodesAtExit(tree);
+        List<TreeNode<Room>> solutionsPass2 = eliminatePathsThatDontVisitAllRooms(solutionsPass1);
 
 
         // we now have a tree of all paths through the maze; now let's check each of them for the following conditions:
@@ -56,54 +57,6 @@ public class MayaRules {
         TreeNode<Room> rootRoom = tree;
 
 
-/*
-        while (room.getExits() == 0 || !weVisitedAllRooms(visitedRooms) || bananaCount != 1) {
-            if (!visitedRooms.contains(room)){
-                if (room.getBananas() > 0)  {
-                    bananaCount = bananaCount + room.getBananas();
-                }
-                else if (room.getMonkeys() > 0){
-                    bananaCount = bananaCount - room.getMonkeys();
-                }
-                if (bananaCount >= 0){
-                    // we still have bananas! Let's continue.
-                    // pick a room to go to
-                    visitedRooms.add(room);
-                    room = room.getAnUnvisitedConnectedRoom();
-                }
-                else {    // we don't have a surplus of bananas!  Let's back up.   Also, let's remove the last room, so we can revisit it, and let's back out our banana count
-                    if (room.getBananas() > 0)  {
-                        bananaCount = bananaCount - room.getBananas();
-                    }
-                    else if (room.getMonkeys() > 0){
-                        bananaCount = bananaCount + room.getMonkeys();
-                    }
-                    room = visitedRooms.getLast();
-                    visitedRooms.removeLast();
-                    // now we have to back out the previous room's banana changes
-                    if (room.getBananas() > 0)  {
-                        bananaCount = bananaCount - room.getBananas();
-                    }
-                    else if (room.getMonkeys() > 0){
-                        bananaCount = bananaCount + room.getMonkeys();
-                    }
-
-                }
-            }
-            else { // we visited this room already!  Let's back out of this.
-                room = visitedRooms.getLast();
-                visitedRooms.removeLast();
-                // back out the changes from the current room, since they'll be applied again at the next go-round
-                if (room.getBananas() > 0)  {
-                    bananaCount = bananaCount - room.getBananas();
-                }
-                else if (room.getMonkeys() > 0){
-                    bananaCount = bananaCount + room.getMonkeys();
-                }
-
-            }
-        }
-*/
    }
 
     private static boolean weVisitedAllRooms(LinkedList<Room> visitedRooms){
@@ -141,6 +94,16 @@ public class MayaRules {
 
     private static List<TreeNode<Room>> countPathsWithLeafNodesAtExit(TreeNode<Room> tree){
         List<TreeNode<Room>> solutions = tree.findPathsWithCertainEndpoint(new Room(0, 0, 0, 4, 2, null));
+        return solutions;
+    }
+
+    private static List<TreeNode<Room>> eliminatePathsThatDontVisitAllRooms(List<TreeNode<Room>> pathList) {
+        List<TreeNode<Room>> solutions = new ArrayList<TreeNode<Room>>();
+        for (TreeNode<Room> currentRoom : pathList) {
+            if (currentRoom.getDistanceToRoot() >= MAP_LENGTH * MAP_WIDTH - 1) {
+                solutions.add(currentRoom);
+            }
+        }
         return solutions;
     }
 
